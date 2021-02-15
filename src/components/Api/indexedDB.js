@@ -91,7 +91,6 @@ class IndexedDB{
         console.log(value)
         
         return value
-
     }
 }
 
