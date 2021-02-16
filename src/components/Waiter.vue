@@ -167,26 +167,40 @@ export default {
 
         isTableShowingCommand(id){
             return this.tableIdShowingCommand === id
-        }
+        },
+        getList(){
+            const indexedCommand = new IndexedDB('command', new OrderLine())
+            
+            let transaction = indexedCommand.db.transaction([indexedCommand.db_name], "readwrite");
+            
+            transaction.oncomplete= _ => {
+                console.log("Success")
+            }
+            
+            transaction.onerror = _ => {
+                console.log("Error")
+            }
+            
+            let value = []
+            let objectStore = transaction.objectStore(this.db_name)
+            
+            objectStore.getAll().onsuccess = e => {
+                value = e.target.result;            
+            };
+
+            console.log(value)
+        },
+
     },
 
     async mounted () {
         
-        const indexedCommand = new IndexedDB('command', new OrderLine())
-
-
-        // for(const i of await indexedCommand.getList()){
-        //     await addCommand(i)
-        //     console.log(i)
-        // }
-
-
-        await this.refresh()
 
         
-        console.log(indexedCommand.value)
+        await this.refresh()
+        console.log(this.getList())
 
-        console.log()
+        
     },
 }
 
