@@ -21,19 +21,40 @@ const actions = {
     async addCommand ({commit, rootState},command) {
         api.setUrl(api.url+'&table=command')
         indexedCommand.insert(command)
-        if(command.hasOwnProperty('name'))
-            await api.insert(command.getCommand())
+        await api.insert(command.getCommand())
         commit('ADD_COMMAND', command)
     },
     async addOrderLine({commit}, products){
         api.setUrl(api.url+'&table=orderline')
         indexedOrder.insert(products)
-        if(products.hasOwnProperty('name'))
-            await api.insert(products.getOrderLine())
+        await api.insert(products.getOrderLine())
         commit('ADD_ARTICLES',products)
     },
-    getCommmand(){
-        indexedDB.getList()
+    getListCommand({commit}){
+        let $this = indexedCommand
+        let transaction = $this.db.transaction([$this.db_name], "readwrite");
+        
+        let objectStore = transaction.objectStore($this.db_name)
+        
+        objectStore.getAll().onsuccess = async e => {
+            let value = await e.target.result; 
+            console.log(value)     
+            value.forEach(v => commit('ADD_COMMAND', new Command(null,null,null,null,null,null,v)))
+        };
+
+    },
+    getListOrder({commit}){
+        let $this = indexedOrder
+        let transaction = $this.db.transaction([$this.db_name], "readwrite");
+        
+        let objectStore = transaction.objectStore($this.db_name)
+        
+        objectStore.getAll().onsuccess = e => {
+            let value = e.target.result;      
+            console.log(value)
+            value.forEach(v => commit('ADD_ARTICLES', new OrderLine(null,null,null,null,null,v)))
+        };
+
     },
     async getCommandId(){
         api.setUrl(api.url+'&table=command')

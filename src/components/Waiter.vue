@@ -49,11 +49,8 @@
 
 import store from './store/index.js'
 import Vuex from 'vuex'
-import {Command} from './app/Command.js'
 import {OrderLine} from './app/OrderLine.js'
-import {IndexedDB} from './Api/indexedDB'
-
-
+import {Command} from './app/Command.js'
 
 export default {
     store: store,
@@ -83,17 +80,16 @@ export default {
             'addCommand',
             'addOrderLine',
             'setActiveTableId',
-            'getCommandId'
-        ],
-        ),
+            'getCommandId',
+            'getListCommand',
+            'getListOrder'
+        ]),
+
         ...Vuex.mapActions({
             remove_command:'removeCommand',
             remove_article:'removeArticle',
-            get_command: 'getCommand'
         }),
-        getCommand(){
-            this.get_command()
-        },
+        
         async removeCommand(command){
             await this.remove_command(command)
             this.list_command = this.listCommand
@@ -172,6 +168,9 @@ export default {
 
     async mounted () {
         await this.refresh()
+        this.getListOrder()
+        this.getListCommand()
+
     },
 }
 

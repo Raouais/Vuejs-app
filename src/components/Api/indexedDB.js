@@ -1,10 +1,12 @@
+
+import Vuex from 'vuex'
+import store from '../store/index.js'
+
 class IndexedDB{
     
-
     constructor(db_name,object){
         this.object = object
         this.db_name = db_name
-        this.value = []
         this.db 
         this.init()
     }
@@ -69,7 +71,7 @@ class IndexedDB{
         }
     }
 
-    getList(){
+    getList(list){
 
         let transaction = this.db.transaction([this.db_name], "readwrite");
         
@@ -85,7 +87,8 @@ class IndexedDB{
         let objectStore = transaction.objectStore(this.db_name)
         
         objectStore.getAll().onsuccess = e => {
-            value = e.target.result;            
+           value = e.target.result;      
+           value.forEach(v => list.push(v))
         };
 
         console.log(value)
