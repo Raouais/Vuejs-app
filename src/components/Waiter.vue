@@ -171,16 +171,7 @@ export default {
     },
 
     async mounted () {
-        
-        const indexedCommand = new IndexedDB('command', new OrderLine())
-
-
         await this.refresh()
-
-        
-        console.log(indexedCommand.value)
-
-        console.log()
     },
 }
 
